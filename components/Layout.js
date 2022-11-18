@@ -1,11 +1,42 @@
 import { useState } from "react";
 import Link from "next/link";
+import Cart from "./Cart";
 
-function Layout({ children }) {
+const categories = [
+  { title: "T-Shirts", slug: "t-shirts" },
+  { title: "Hats", slug: "hats" },
+  { title: "Stickers", slug: "stickers" },
+  { title: "Tote Bags", slug: "tote-bags" },
+];
+
+const socialNavigation = [
+  { title: "Twitter", slug: "twitter" },
+  { title: "Instagram", slug: "instagram" },
+  { title: "Facebook", slug: "facebook" },
+];
+
+const legalNavigation = [
+  { title: "Privacy Policy", slug: "privacy-policy" },
+  { title: "Terms of Service", slug: "terms-of-service" },
+];
+
+function Layout({
+  children,
+  siteConfig: {
+    title,
+    url,
+    footerText,
+    logo,
+    lang,
+    mainNavigation,
+    footerNavigation,
+  },
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const handleMenu = () => setMenuOpen(!menuOpen);
   const handleOpen = () => setCartOpen(!cartOpen);
+
   return (
     <div className="bg-white">
       <header>
@@ -31,11 +62,20 @@ function Layout({ children }) {
                   fill="currentColor"
                 />
               </svg>
-              <span className="mx-1 text-sm">NY</span>
+              <span className="mx-1 text-sm">NL</span>
             </div>
-            <div className="w-full text-gray-700 md:text-center text-2xl font-semibold">
-              Pulp Inc.
-            </div>
+            <Link href={url}>
+              <a className="w-full text-gray-700 md:text-center text-2xl font-semibold uppercase">
+                <picture>
+                  <img
+                    src={logo.url}
+                    alt={logo.alt}
+                    className="h-24 w-24 mx-auto"
+                  />
+                </picture>
+                {title}
+              </a>
+            </Link>
             <div className="flex items-center justify-end w-full">
               <button
                 onClick={handleOpen}
@@ -77,21 +117,16 @@ function Layout({ children }) {
             } sm:flex sm:justify-center sm:items-center mt-4`}
           >
             <div className="flex flex-col sm:flex-row">
-              <Link href="/">
-                <a className="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0">
-                  Home
-                </a>
-              </Link>
-              <Link href="/products">
-                <a className="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0">
-                  Shop
-                </a>
-              </Link>
-              <Link href="/about">
-                <a className="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0">
-                  About
-                </a>
-              </Link>
+              {mainNavigation.map((item) => (
+                <Link
+                  href={item.slug === "/" ? item.slug : `/${item.slug}`}
+                  key={`mainnav-${item.slug}`}
+                >
+                  <a className="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0">
+                    {item.title}
+                  </a>
+                </Link>
+              ))}
             </div>
           </nav>
           <div className="relative mt-6 max-w-lg mx-auto">
@@ -121,16 +156,76 @@ function Layout({ children }) {
       </header>
       {/*
       // This Cart doesn't really work… yet!
+    */}
       <Cart cartOpen={cartOpen} handleOpen={handleOpen} />
-      */}
       <main className="my-8">{children}</main>
       <footer className="bg-gray-200">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex flex-wrap">
+            <div className="w-full md:w-1/4 text-center md:text-left">
+              <h5 className="uppercase mb-6 font-bold">Links</h5>
+              <ul className="mb-4">
+                {footerNavigation.map((item) => (
+                  <li key={`footernav-${item.slug}`}>
+                    <Link href={`${item.slug}`}>
+                      <a className="text-gray-600 hover:text-gray-800 hover:underline text-sm block mb-2">
+                        {item.title}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="w-full md:w-1/4 text-center md:text-left">
+              <h5 className="uppercase mb-6 font-bold">Categories</h5>
+              <ul className="mb-4">
+                {categories.map((item) => (
+                  <li key={`footernav-${item.slug}`}>
+                    <Link href={`/category/${item.slug}`}>
+                      <a className="text-gray-600 hover:text-gray-800 hover:underline text-sm block mb-2">
+                        {item.title}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="w-full md:w-1/4 text-center md:text-left">
+              <h5 className="uppercase mb-6 font-bold">Legal</h5>
+              <ul className="mb-4">
+                {legalNavigation.map((item) => (
+                  <li key={`footernav-${item.slug}`}>
+                    <Link href={`${item.slug}`}>
+                      <a className="text-gray-600 hover:text-gray-800 hover:underline text-sm block mb-2">
+                        {item.title}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="w-full md:w-1/4 text-center md:text-left">
+              <h5 className="uppercase mb-6 font-bold">Social</h5>
+              <ul className="mb-4">
+                {socialNavigation.map((item) => (
+                  <li key={`footernav-${item.slug}`}>
+                    <Link href={`${item.slug}`}>
+                      <a className="text-gray-600 hover:text-gray-800 hover:underline text-sm block mb-2">
+                        {item.title}
+                      </a>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
         <div className="container mx-auto px-6 py-3 flex justify-between items-center">
           <a
             href="#"
             className="text-xl font-bold text-gray-500 hover:text-gray-400"
           >
-            Pulp Inc.
+            {footerText[0].children[0].text}
           </a>
           <p className="py-2 text-gray-500 sm:py-0">All rights reserved</p>
         </div>
