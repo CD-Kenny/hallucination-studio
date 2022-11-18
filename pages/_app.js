@@ -28,7 +28,6 @@ const query = groq`
 `;
 
 function MyApp({ Component, pageProps, siteConfig }) {
-  console.log({siteConfig})
   return (
     <Layout siteConfig={siteConfig}>
       <Component {...pageProps} />

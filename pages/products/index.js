@@ -2,8 +2,9 @@ import Error from "next/error";
 import { useRouter } from "next/router";
 import { getClient, usePreviewSubscription } from "../../utils/sanity";
 import ProductsPage from "../../components/ProductsPage";
+import { groq } from "next-sanity";
 
-const query = `//groq
+const query = groq`
   *[_type == "product" && defined(slug.current)]
 `;
 
